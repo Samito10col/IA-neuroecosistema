@@ -3,6 +3,8 @@
 Proyecto Final Integrador · Electiva I de Profundización – Inteligencia Artificial
 Universidad Santo Tomás, Seccional Tunja · Facultad de Ingeniería de Sistemas
 
+**Integrantes:** [Nombre 1], [Nombre 2], [Nombre 3] · **Docente:** Diego Alejandro Vela Beltrán
+
 Simulación 2D en la que **presas** y **depredadores** deciden cómo moverse a partir de la salida de
 una **red neuronal multicapa** (dos capas ocultas) propia de cada especie. Las redes se entrenan con
 **neuroevolución** (algoritmo genético con coevolución) y, en el caso del depredador, con un
@@ -19,8 +21,8 @@ Requiere Python 3.10 o superior. No usa GPU ni librerías de aprendizaje profund
 retropropagación y el algoritmo genético están escritos con NumPy para que cada paso sea visible.
 
 ```bash
-git clone <URL-del-repositorio>
-cd neuroecosistema
+git clone https://github.com/Samito10col/IA-neuroecosistema.git
+cd IA-neuroecosistema
 python -m venv .venv
 # Windows: .venv\Scripts\activate      Linux/Mac: source .venv/bin/activate
 pip install -r requirements.txt
@@ -97,7 +99,7 @@ results/tables        resúmenes y pruebas de Mann-Whitney
 results/figures       gráficas
 results/RESUMEN_RESULTADOS.md   tablas de todos los experimentos
 viewer/               visor HTML y demos
-docs/                 informe técnico, bitácora de decisiones, pilotos, guía de sustentación
+docs/                 Informe (.md y .docx), Decisiones (bitácora, .md y .docx), Pruebas (pilotos)
 ```
 
 ## 5. Resumen del diseño
@@ -111,7 +113,7 @@ docs/                 informe técnico, bitácora de decisiones, pilotos, guía 
 | Aptitud | vida media + 0,02 × plantas comidas | capturas/depredador + 0,5 × energía final + acecho |
 | Física | velocidad 1,0 · percepción 25 | velocidad 1,15 · percepción 30 · digestión 20 pasos |
 
-Detalle completo y justificación: `docs/INFORME_TECNICO.md` y `docs/BITACORA_DECISIONES.md`.
+Detalle completo y justificación: [`docs/Informe.md`](docs/Informe.md), [`docs/Decisiones.md`](docs/Decisiones.md) y [`docs/Pruebas.md`](docs/Pruebas.md).
 
 ## 6. Semillas y trazabilidad
 

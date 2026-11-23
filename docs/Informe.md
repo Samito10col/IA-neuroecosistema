@@ -1,7 +1,7 @@
 ---
 title: "NeuroEcosistema: depredadores y presas gobernados por redes neuronales"
 subtitle: "Informe técnico de análisis — Proyecto Final Integrador"
-author: "[Integrantes del equipo] · Electiva I de Profundización – Inteligencia Artificial · Docente: Diego Alejandro Vela Beltrán · Universidad Santo Tomás, Seccional Tunja"
+author: "Samuel Avila- Miler Barrera · Electiva I – Inteligencia Artificial · Docente: Diego Alejandro Vela Beltrán · Universidad Santo Tomás, Seccional Tunja"
 date: "Noviembre de 2026"
 lang: es
 ---
