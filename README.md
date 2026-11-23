@@ -104,7 +104,7 @@ docs/                 informe técnico, bitácora de decisiones, pilotos, guía 
 
 | Elemento | Presa | Depredador |
 |---|---|---|
-| Red | 14 → 16 → 16 → 2 (tanh), 562 parámetros | 14 → 16 → 16 → 2 (tanh), 562 parámetros |
+| Red | 14 → 16 → 16 → 2, 562 parámetros | 14 → 16 → 16 → 2, 562 parámetros |
 | Entradas | dirección y distancia a planta, a depredador y a obstáculo; energía; posición; señal de exploración | dirección y distancia a presa; energía; digestión; dirección a otro depredador; posición; obstáculo; exploración |
 | Salida | vector de movimiento (vx, vy) | vector de movimiento (vx, vy) |
 | Entrenamiento | neuroevolución desde pesos aleatorios | supervisado (imitación de reglas) + neuroevolución |
