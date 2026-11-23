@@ -1,0 +1,48 @@
+{
+  "base": {
+    "descripcion": "Arquitectura principal: 12-16-16-2 (tanh)",
+    "hidden": [
+      16,
+      16
+    ],
+    "pop_size": 30,
+    "generations": 60,
+    "elite": 3,
+    "tournament": 3,
+    "mutation_sigma": 0.1,
+    "mutation_rate": 0.15,
+    "crossover_rate": 0.5,
+    "checkpoint_every": 10,
+    "train_seeds": [
+      11,
+      22,
+      33
+    ],
+    "pred_pretrain": true,
+    "pretrain_episodes": 30,
+    "pretrain_epochs": 30
+  },
+  "small": {
+    "descripcion": "Arquitectura reducida: 12-4-4-2 (tanh), mismo presupuesto evolutivo",
+    "hidden": [
+      4,
+      4
+    ],
+    "pop_size": 30,
+    "generations": 60,
+    "elite": 3,
+    "tournament": 3,
+    "mutation_sigma": 0.1,
+    "mutation_rate": 0.15,
+    "crossover_rate": 0.5,
+    "checkpoint_every": 10,
+    "train_seeds": [
+      11,
+      22,
+      33
+    ],
+    "pred_pretrain": true,
+    "pretrain_episodes": 30,
+    "pretrain_epochs": 30
+  }
+}

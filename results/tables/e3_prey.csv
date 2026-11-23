@@ -1,0 +1,10 @@
+scenario,ctrl,prey_lifetime_media,prey_survival_media,food_per_prey_media,prey_final_energy_media,prey_lifetime_desv,prey_survival_desv,food_per_prey_desv,prey_final_energy_desv,n
+a_abundancia,aleatorio,0.4863,0.1167,2.2217,0.3719,0.0593,0.0661,0.4061,0.2464,30
+a_abundancia,red neuronal,0.8615,0.75,12.3067,0.8768,0.0667,0.14,1.9573,0.0556,90
+a_abundancia,reglas,0.6708,0.3033,8.9833,0.6703,0.0747,0.1389,1.511,0.1499,30
+b_escasez,aleatorio,0.3789,0.0033,0.395,0.0075,0.0347,0.0127,0.1289,0.0284,30
+b_escasez,red neuronal,0.6487,0.2394,1.4189,0.4428,0.0587,0.0947,0.2728,0.1476,90
+b_escasez,reglas,0.5444,0.085,1.36,0.4216,0.0465,0.0882,0.4078,0.3376,30
+c_presion,aleatorio,0.2766,0.0167,1.455,0.1306,0.0557,0.0273,0.3223,0.2681,30
+c_presion,red neuronal,0.6105,0.3694,5.9511,0.7426,0.1076,0.1607,2.0139,0.1388,90
+c_presion,reglas,0.4079,0.0417,5.8,0.2581,0.0736,0.072,1.2903,0.3757,30

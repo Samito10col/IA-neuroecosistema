@@ -1,0 +1,7 @@
+scenario,config,prey_lifetime_media,prey_survival_media,food_per_prey_media,prey_final_energy_media,prey_lifetime_desv,prey_survival_desv,food_per_prey_desv,prey_final_energy_desv,n
+a_abundancia,base,0.8615,0.75,12.3067,0.8768,0.0667,0.14,1.9573,0.0556,90
+a_abundancia,small,0.8294,0.6667,9.9689,0.8165,0.0813,0.1599,2.5812,0.1047,90
+b_escasez,base,0.6487,0.2394,1.4189,0.4428,0.0587,0.0947,0.2728,0.1476,90
+b_escasez,small,0.6134,0.2139,1.3044,0.489,0.0703,0.0983,0.3009,0.1924,90
+c_presion,base,0.6105,0.3694,5.9511,0.7426,0.1076,0.1607,2.0139,0.1388,90
+c_presion,small,0.602,0.3561,6.1767,0.7365,0.114,0.1711,2.3075,0.2169,90

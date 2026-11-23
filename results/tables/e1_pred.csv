@@ -1,0 +1,13 @@
+scenario,controller,captures_per_pred_media,time_to_first_capture_media,pred_final_energy_media,pred_survival_media,captures_per_pred_desv,time_to_first_capture_desv,pred_final_energy_desv,pred_survival_desv,n
+a_abundancia,red_aleatoria_init,0.0056,397.6778,0.0,0.0,0.0527,22.0305,0.0,0.0,90
+a_abundancia,red_final,6.8278,53.5889,0.5263,0.8611,1.6763,16.1565,0.1949,0.2489,90
+a_abundancia,red_gen0,5.7778,53.8444,0.6227,0.9056,1.6095,17.9148,0.215,0.2235,90
+a_abundancia,red_supervisada,5.9,54.0889,0.6757,0.9222,1.5654,17.8651,0.1988,0.1822,90
+b_escasez,red_aleatoria_init,0.0,400.0,0.0,0.0,0.0,0.0,0.0,0.0,90
+b_escasez,red_final,5.0389,52.2889,0.3605,0.7667,1.1951,16.1477,0.1928,0.3198,90
+b_escasez,red_gen0,4.2222,54.7778,0.3927,0.7889,1.1972,18.3191,0.1878,0.2901,90
+b_escasez,red_supervisada,4.1722,55.6778,0.4208,0.8056,0.9691,18.1745,0.1601,0.2563,90
+c_presion,red_aleatoria_init,0.0,400.0,0.0,0.0,0.0,0.0,0.0,0.0,90
+c_presion,red_final,3.6622,25.7778,0.1532,0.4089,0.4129,14.7311,0.0939,0.1964,90
+c_presion,red_gen0,3.5178,27.1111,0.2849,0.6689,0.4405,16.1701,0.1069,0.2081,90
+c_presion,red_supervisada,3.6356,27.2778,0.2935,0.6822,0.4886,16.4829,0.1078,0.187,90

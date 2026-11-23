@@ -1,0 +1,7 @@
+scenario,config,captures_per_pred_media,time_to_first_capture_media,pred_final_energy_media,pred_survival_media,captures_per_pred_desv,time_to_first_capture_desv,pred_final_energy_desv,pred_survival_desv,n
+a_abundancia,base,6.8278,53.5889,0.5263,0.8611,1.6763,16.1565,0.1949,0.2489,90
+a_abundancia,small,6.8278,51.1111,0.5915,0.8889,1.766,17.4629,0.1862,0.209,90
+b_escasez,base,5.0389,52.2889,0.3605,0.7667,1.1951,16.1477,0.1928,0.3198,90
+b_escasez,small,4.85,51.0556,0.3581,0.75,1.1378,16.8765,0.1712,0.2829,90
+c_presion,base,3.6622,25.7778,0.1532,0.4089,0.4129,14.7311,0.0939,0.1964,90
+c_presion,small,3.6222,24.8,0.1487,0.4378,0.4266,13.9173,0.0854,0.2075,90

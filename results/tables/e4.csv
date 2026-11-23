@@ -1,0 +1,7 @@
+scenario,matchup,prey_lifetime_media,prey_survival_media,captures_media,food_per_prey_media,pred_final_energy_media,time_to_first_capture_media,prey_lifetime_desv,prey_survival_desv,captures_desv,food_per_prey_desv,pred_final_energy_desv,time_to_first_capture_desv,n
+a_abundancia,red_vs_red,0.6404,0.2989,13.7444,9.6789,0.6694,36.7222,0.0761,0.1499,2.9511,2.1555,0.189,19.7587,90
+a_abundancia,reglas_vs_reglas,0.6708,0.3033,11.9,8.9833,0.6261,52.5,0.0747,0.1389,3.0212,1.511,0.216,17.8842,30
+b_escasez,red_vs_red,0.5055,0.0711,11.2667,1.2156,0.3781,38.0111,0.0662,0.0768,3.0787,0.2793,0.1809,18.029,90
+b_escasez,reglas_vs_reglas,0.5444,0.085,8.2667,1.36,0.3745,52.7667,0.0465,0.0882,2.5042,0.4078,0.2116,18.5745,30
+c_presion,red_vs_red,0.3549,0.0472,18.7556,4.145,0.148,17.8,0.09,0.0819,1.6914,1.4656,0.0953,12.5162,90
+c_presion,reglas_vs_reglas,0.4079,0.0417,18.5,5.8,0.2732,24.4,0.0736,0.072,2.3599,1.2903,0.0969,15.069,30

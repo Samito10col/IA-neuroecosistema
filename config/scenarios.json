@@ -1,0 +1,23 @@
+{
+  "a_abundancia": {
+    "descripcion": "Recursos suficientes y pocos depredadores",
+    "n_food": 60,
+    "regrow": 0.02,
+    "n_pred": 2,
+    "n_obst": 0
+  },
+  "b_escasez": {
+    "descripcion": "Escasez de alimento (25% de las plantas y rebrote 4 veces más lento)",
+    "n_food": 15,
+    "regrow": 0.005,
+    "n_pred": 2,
+    "n_obst": 0
+  },
+  "c_presion": {
+    "descripcion": "Mayor presión de depredación (5 depredadores) y 6 obstáculos",
+    "n_food": 60,
+    "regrow": 0.02,
+    "n_pred": 5,
+    "n_obst": 6
+  }
+}

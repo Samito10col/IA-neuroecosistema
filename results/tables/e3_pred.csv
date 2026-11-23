@@ -1,0 +1,10 @@
+scenario,ctrl,captures_per_pred_media,time_to_first_capture_media,pred_final_energy_media,pred_survival_media,captures_per_pred_desv,time_to_first_capture_desv,pred_final_energy_desv,pred_survival_desv,n
+a_abundancia,aleatorio,0.0,400.0,0.0,0.0,0.0,0.0,0.0,0.0,30
+a_abundancia,red neuronal,6.8278,53.5889,0.5263,0.8611,1.6763,16.1565,0.1949,0.2489,90
+a_abundancia,reglas,5.95,52.5,0.6261,0.9,1.5106,17.8842,0.216,0.2421,30
+b_escasez,aleatorio,0.0167,388.9667,0.0,0.0,0.0913,60.4321,0.0,0.0,30
+b_escasez,red neuronal,5.0389,52.2889,0.3605,0.7667,1.1951,16.1477,0.1928,0.3198,90
+b_escasez,reglas,4.1333,52.7667,0.3745,0.7667,1.2521,18.5745,0.2116,0.2857,30
+c_presion,aleatorio,0.0,400.0,0.0,0.0,0.0,0.0,0.0,0.0,30
+c_presion,red neuronal,3.6622,25.7778,0.1532,0.4089,0.4129,14.7311,0.0939,0.1964,90
+c_presion,reglas,3.7,24.4,0.2732,0.6467,0.472,15.069,0.0969,0.1795,30

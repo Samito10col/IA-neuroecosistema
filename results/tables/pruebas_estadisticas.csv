@@ -1,0 +1,49 @@
+experimento,escenario,A,B,metrica,media_A,media_B,p
+E1_prey,a_abundancia,red_final,red_gen0,prey_lifetime,0.8615347222222222,0.6249791666666666,7.056256263228731e-28
+E1_prey,a_abundancia,red_final,red_aleatoria_init,prey_lifetime,0.8615347222222222,0.4870180555555555,5.053258753675836e-31
+E1_prey,b_escasez,red_final,red_gen0,prey_lifetime,0.6486736111111111,0.49306944444444445,5.993963194151552e-24
+E1_prey,b_escasez,red_final,red_aleatoria_init,prey_lifetime,0.6486736111111111,0.43770416666666656,1.0188795227740673e-29
+E1_prey,c_presion,red_final,red_gen0,prey_lifetime,0.6105194444444445,0.37866111111111117,2.0247672867137348e-23
+E1_prey,c_presion,red_final,red_aleatoria_init,prey_lifetime,0.6105194444444445,0.2867763888888889,4.99495853096355e-29
+E1_pred,a_abundancia,red_final,red_gen0,captures_per_pred,6.8277777777777775,5.777777777777778,4.786814035786586e-06
+E1_pred,a_abundancia,red_final,red_aleatoria_init,captures_per_pred,6.8277777777777775,0.005555555555555556,3.8069356787110315e-35
+E1_pred,a_abundancia,red_final,red_supervisada,captures_per_pred,6.8277777777777775,5.9,1.5157345399267312e-05
+E1_pred,a_abundancia,red_supervisada,red_aleatoria_init,captures_per_pred,5.9,0.005555555555555556,3.931977833562478e-35
+E1_pred,b_escasez,red_final,red_gen0,captures_per_pred,5.038888888888889,4.222222222222222,5.149019842265464e-07
+E1_pred,b_escasez,red_final,red_aleatoria_init,captures_per_pred,5.038888888888889,0.0,2.3567706062323094e-35
+E1_pred,b_escasez,red_final,red_supervisada,captures_per_pred,5.038888888888889,4.1722222222222225,5.489449390260936e-09
+E1_pred,b_escasez,red_supervisada,red_aleatoria_init,captures_per_pred,4.1722222222222225,0.0,2.1529696320756757e-35
+E1_pred,c_presion,red_final,red_gen0,captures_per_pred,3.6622222222222223,3.5177777777777774,0.008615618847360703
+E1_pred,c_presion,red_final,red_aleatoria_init,captures_per_pred,3.6622222222222223,0.0,1.420522534012561e-35
+E1_pred,c_presion,red_final,red_supervisada,captures_per_pred,3.6622222222222223,3.6355555555555554,0.9513802550136202
+E1_pred,c_presion,red_supervisada,red_aleatoria_init,captures_per_pred,3.6355555555555554,0.0,1.2794071393236865e-35
+E2_prey,a_abundancia,base,small,prey_lifetime,0.8615347222222222,0.8293791666666666,0.005493775279090864
+E2_prey,b_escasez,base,small,prey_lifetime,0.6486736111111111,0.6133847222222222,0.0007019881852080446
+E2_prey,c_presion,base,small,prey_lifetime,0.6105194444444445,0.6020194444444446,0.853596877172515
+E2_pred,a_abundancia,base,small,captures_per_pred,6.8277777777777775,6.8277777777777775,0.7825284755121542
+E2_pred,b_escasez,base,small,captures_per_pred,5.038888888888889,4.85,0.15422400228917624
+E2_pred,c_presion,base,small,captures_per_pred,3.6622222222222223,3.6222222222222222,0.46716054558818354
+E3_prey,a_abundancia,red neuronal,reglas,prey_lifetime,0.8615347222222222,0.6707499999999998,4.749996913553657e-15
+E3_prey,a_abundancia,red neuronal,aleatorio,prey_lifetime,0.8615347222222222,0.48626249999999993,2.8664575890330448e-16
+E3_prey,b_escasez,red neuronal,reglas,prey_lifetime,0.6486736111111111,0.5443958333333333,1.1139270238702212e-11
+E3_prey,b_escasez,red neuronal,aleatorio,prey_lifetime,0.6486736111111111,0.3789083333333333,2.866119851777306e-16
+E3_prey,c_presion,red neuronal,reglas,prey_lifetime,0.6105194444444445,0.40791249999999996,5.38491638507437e-13
+E3_prey,c_presion,red neuronal,aleatorio,prey_lifetime,0.6105194444444445,0.2766333333333334,3.683829180893299e-16
+E3_prey,a_abundancia,red neuronal,reglas,prey_survival,0.7499999999999999,0.30333333333333334,2.47745912788583e-15
+E3_prey,a_abundancia,red neuronal,aleatorio,prey_survival,0.7499999999999999,0.11666666666666667,2.2367492369535284e-16
+E3_prey,b_escasez,red neuronal,reglas,prey_survival,0.23944444444444446,0.08499999999999996,5.178667264271959e-10
+E3_prey,b_escasez,red neuronal,aleatorio,prey_survival,0.23944444444444446,0.0033333333333333335,1.5327500028032242e-16
+E3_prey,c_presion,red neuronal,reglas,prey_survival,0.36944444444444435,0.04166666666666666,4.7595933636840766e-15
+E3_prey,c_presion,red neuronal,aleatorio,prey_survival,0.36944444444444435,0.016666666666666666,2.1948314412058801e-16
+E3_pred,a_abundancia,red neuronal,reglas,captures_per_pred,6.8277777777777775,5.95,0.0027902392400436142
+E3_pred,a_abundancia,red neuronal,aleatorio,captures_per_pred,6.8277777777777775,0.0,1.3289726607300567e-16
+E3_pred,b_escasez,red neuronal,reglas,captures_per_pred,5.038888888888889,4.133333333333334,0.0005627177091485367
+E3_pred,b_escasez,red neuronal,aleatorio,captures_per_pred,5.038888888888889,0.016666666666666666,1.1984021632320358e-16
+E3_pred,c_presion,red neuronal,reglas,captures_per_pred,3.6622222222222223,3.7,0.33930104440948716
+E3_pred,c_presion,red neuronal,aleatorio,captures_per_pred,3.6622222222222223,0.0,5.653019128907876e-17
+E3_pred,a_abundancia,red neuronal,reglas,time_to_first_capture,53.58888888888889,52.5,0.8604345061414502
+E3_pred,a_abundancia,red neuronal,aleatorio,time_to_first_capture,53.58888888888889,400.0,1.6501399967958315e-16
+E3_pred,b_escasez,red neuronal,reglas,time_to_first_capture,52.28888888888889,52.766666666666666,0.7502627571474436
+E3_pred,b_escasez,red neuronal,aleatorio,time_to_first_capture,52.28888888888889,388.96666666666664,3.7114146035589996e-16
+E3_pred,c_presion,red neuronal,reglas,time_to_first_capture,25.77777777777778,24.4,0.6232252076792
+E3_pred,c_presion,red neuronal,aleatorio,time_to_first_capture,25.77777777777778,400.0,1.6349475816454217e-16
