@@ -11,6 +11,12 @@
 
 ## Si piden modificar un parámetro en vivo
 
+Lo más rápido: `viewer/juego.html`. Mover el control pedido (p. ej. depredadores de 2 a 5) y comparar el
+resultado con el mismo mapa. Para mostrar "antes vs. después del entrenamiento" en vivo, mover el control de
+entrenamiento de las presas de "sin entrenar" a "generación 60" y comparar cuántas sobreviven.
+
+Desde Python (cifras oficiales):
+
 ```bash
 python scripts/make_replay.py --scenario a_abundancia --n_pred 5 --name cambio_en_vivo
 python scripts/make_replay.py --scenario b_escasez --n_food 5 --name escasez_extrema

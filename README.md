@@ -29,6 +29,22 @@ python scripts/check.py        # verificaciones rápidas (deben salir todas OK)
 
 ## 2. Ver la simulación (demo)
 
+### 2.1 Simulación en vivo (recomendada para la sustentación)
+
+Abra `viewer/juego.html` con doble clic. Permite cambiar en vivo el número de presas, depredadores,
+plantas, obstáculos y el rebrote; elegir el "cerebro" de cada especie (red, reglas o aleatorio); elegir
+el **nivel de entrenamiento** (sin entrenar, solo supervisado, generaciones 0 a 60) y la arquitectura
+(16-16 o 4-4). Cada cambio reinicia el mundo con la misma semilla, para que la única diferencia sea el
+parámetro cambiado. Al hacer clic en un animal se ven sus 14 entradas, sus dos capas ocultas y su salida.
+
+Es una réplica en JavaScript de `neuroeco/env.py` que usa los pesos reales de `models/`. Se validó contra
+Python: la red da las mismas salidas (diferencia máx. 2·10⁻⁶) y los promedios en 30 mapas coinciden
+(p. ej. supervivencia de presas neuronales en (a): 0,76 en JS vs 0,75 en Python). Su generador aleatorio
+es distinto, así que un mapa con la misma semilla no es idéntico al de Python; las cifras oficiales salen
+de `scripts/run_experiments.py`. Para regenerarla: `python scripts/make_game.py`.
+
+### 2.2 Episodios grabados desde Python
+
 Los visores son archivos HTML autocontenidos: se abren con doble clic, sin servidor.
 
 ```bash

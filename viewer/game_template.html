@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeuroEcosistema · simulación en vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050507; --panel:#0e0e14; --panel2:#14141c; --line:#23232f; --txt:#f2f2f7; --mut:#8d8da3;
+    --cy:#7fdcf2; --vi:#9b5cf6; --vi2:#6d28d9; --grad:linear-gradient(135deg,#7fdcf2 0%,#9b8cf8 45%,#8b3cf0 100%);
+    --prey:#7fdcf2; --pred:#ff7a6b; --food:#7ee08a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 Inter,system-ui,"Segoe UI",sans-serif}
+  a{color:var(--cy)}
+  /* ---------- hero ---------- */
+  .hero{position:relative;text-align:center;padding:46px 20px 18px;overflow:hidden}
+  .hero h1{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:400;font-size:clamp(54px,9vw,118px);line-height:.88;letter-spacing:-2px;margin:0}
+  .hero p{color:var(--mut);margin:18px auto 0;max-width:640px;font-size:15px}
+  .deco{position:absolute;pointer-events:none;filter:drop-shadow(0 18px 30px rgba(139,60,240,.35))}
+  .deco.wave{left:4%;top:120px;width:150px;animation:float 7s ease-in-out infinite}
+  .deco.star{right:5%;top:40px;width:130px;animation:spin 26s linear infinite}
+  .deco.ball{right:22%;bottom:-10px;width:54px;animation:float 5s ease-in-out infinite reverse}
+  @keyframes float{50%{transform:translateY(-14px) rotate(4deg)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* ---------- layout ---------- */
+  .wrap{max-width:1380px;margin:0 auto;padding:10px 22px 40px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,1fr);gap:22px;align-items:start}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}.deco{display:none}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px}
+  .label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--mut);margin:0 0 10px;font-weight:600}
+  /* ---------- world ---------- */
+  .worldbox{position:relative;border-radius:22px;padding:2px;background:var(--grad)}
+  .worldbox canvas{display:block;width:100%;aspect-ratio:1;border-radius:20px;background:#07090a;cursor:crosshair}
+  .overlay{position:absolute;inset:2px;border-radius:20px;display:none;place-items:center;background:rgba(5,5,7,.72);backdrop-filter:blur(3px);text-align:center}
+  .overlay.show{display:grid}
+  .overlay h3{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:500;font-size:30px;margin:0 0 6px}
+  .bar{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .pill{border:1px solid #34344a;background:#0c0c12;color:var(--txt);border-radius:999px;padding:9px 18px;font:600 12px Inter,system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:inline-flex;gap:10px;align-items:center;transition:.2s}
+  .pill:hover{border-color:var(--vi)}
+  .pill.main{background:var(--grad);border:none;color:#0a0a10}
+  .pill .ic{width:22px;height:22px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#0a0a10;font-size:12px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+  .stat b{font-family:"Space Grotesk",system-ui,sans-serif;font-size:26px;font-weight:500;display:block;line-height:1.1}
+  .stat span{font-size:11px;color:var(--mut)}
+  /* ---------- controls ---------- */
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+  .seg button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:8px 6px;cursor:pointer;font:500 12px Inter,system-ui,sans-serif;line-height:1.25}
+  .seg button.on{background:var(--grad);color:#0a0a10;border-color:transparent}
+  .ctl{display:grid;grid-template-columns:28px 1fr 56px;gap:10px;align-items:center;margin:9px 0}
+  .ctl .em{font-size:20px;text-align:center}
+  .ctl label{font-size:12.5px;display:block;margin-bottom:2px}
+  .ctl output{font-family:"Space Grotesk",system-ui,sans-serif;font-size:18px;text-align:right}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9px;background:#24243a;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--grad);border:2px solid #fff;cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#9b8cf8;border:2px solid #fff;cursor:pointer}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  select,input[type=number]{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:7px 9px;font:13px Inter,system-ui,sans-serif}
+  .small{font-size:11.5px;color:var(--mut)}
+  .sep{height:1px;background:var(--line);margin:14px 0}
+  .lvl{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-top:2px}
+  /* ---------- inspector ---------- */
+  .row{display:grid;grid-template-columns:118px 1fr 42px;gap:6px;align-items:center;font-size:11px;margin:2px 0}
+  .track{height:8px;background:#1c1c28;border-radius:5px;position:relative;overflow:hidden}
+  .track i{position:absolute;top:0;bottom:0;border-radius:5px}
+  .neur{display:flex;gap:3px;flex-wrap:wrap;margin:4px 0 10px}
+  .neur div{width:17px;height:17px;border-radius:5px}
+  .who{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+  .who .big{font-size:34px}
+  .who b{font-family:"Space Grotesk",system-ui,sans-serif;font-size:18px;font-weight:500}
+  /* ---------- modal ---------- */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;place-items:center;z-index:9;padding:20px}
+  .modal.show{display:grid}
+  .modal .card{max-width:760px;max-height:86vh;overflow:auto}
+  .modal h2{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:500;font-size:30px;margin:0 0 10px}
+  .modal h4{margin:16px 0 4px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;color:var(--mut);font-size:12px}
+  footer{color:var(--mut);font-size:12px;text-align:center;padding:10px 0 30px}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <svg class="deco wave" viewBox="0 0 200 260"><defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ee6f7"/><stop offset=".5" stop-color="#9b8cf8"/><stop offset="1" stop-color="#7c2ff0"/></linearGradient>
+    <radialGradient id="hl" cx=".35" cy=".3" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+    <path d="M60 20c40-14 70 18 56 52-10 24-40 30-34 58 6 30 52 28 66 56 16 32-10 66-48 62-40-4-50-44-74-60C2 172-6 130 18 110c22-18 30-26 18-50-10-20 4-34 24-40z" fill="url(#g1)"/>
+    <path d="M60 20c40-14 70 18 56 52-10 24-40 30-34 58 6 30 52 28 66 56 16 32-10 66-48 62-40-4-50-44-74-60C2 172-6 130 18 110c22-18 30-26 18-50-10-20 4-34 24-40z" fill="url(#hl)"/></svg>
+  <svg class="deco star" viewBox="0 0 200 200"><defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ee6f7"/><stop offset=".55" stop-color="#9b8cf8"/><stop offset="1" stop-color="#7c2ff0"/></linearGradient></defs>
+    <g transform="translate(100 100)" fill="url(#g2)">
+      <rect x="-19" y="-92" width="38" height="92" rx="19"/><rect x="-19" y="-92" width="38" height="92" rx="19" transform="rotate(60)"/>
+      <rect x="-19" y="-92" width="38" height="92" rx="19" transform="rotate(120)"/><rect x="-19" y="-92" width="38" height="92" rx="19" transform="rotate(180)"/>
+      <rect x="-19" y="-92" width="38" height="92" rx="19" transform="rotate(240)"/><rect x="-19" y="-92" width="38" height="92" rx="19" transform="rotate(300)"/>
+      <circle r="30"/></g></svg>
+  <svg class="deco ball" viewBox="0 0 100 100"><defs><radialGradient id="g3" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#d9f6ff"/><stop offset=".45" stop-color="#9b8cf8"/><stop offset="1" stop-color="#5b21b6"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#g3)"/></svg>
+  <h1>neuro<br>ecosistema</h1>
+  <p>Conejos y lobos que deciden cada movimiento con su propia red neuronal entrenada. Cambia el mundo y mira cómo responden.</p>
+</section>
+
+<div class="wrap">
+<div class="grid">
+  <!-- ======== izquierda: mundo ======== -->
+  <section>
+    <div class="worldbox">
+      <canvas id="world" width="1000" height="1000"></canvas>
+      <div class="overlay" id="endOv"><div><h3 id="endT">Fin del episodio</h3><div id="endS" class="small"></div>
+        <div class="bar" style="justify-content:center"><button class="pill main" id="again">Repetir</button></div></div></div>
+    </div>
+    <div class="bar">
+      <button class="pill main" id="play">▶ Iniciar</button>
+      <button class="pill" id="stepB">+1 paso</button>
+      <button class="pill" id="resetB">↺ Reiniciar</button>
+      <select id="speed" style="width:auto"><option value="0.25">lento</option><option value="0.5" selected>normal</option><option value="1">rápido</option><option value="3">muy rápido</option></select>
+      <span class="small" id="tlabel" style="margin-left:auto">paso 0</span>
+    </div>
+    <div class="legend">
+      <span>🐇 presa (red o regla)</span><span>🐺 depredador (💤 = digiriendo)</span><span>🌿 planta · 🌱 comida, rebrotando</span><span>🪨 obstáculo</span>
+      <span>Haz clic en un animal para ver su red.</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sPrey">-</b><span>presas vivas</span></div>
+      <div class="stat"><b id="sPred">-</b><span>depredadores vivos</span></div>
+      <div class="stat"><b id="sCaps">-</b><span>capturas</span></div>
+      <div class="stat"><b id="sFood">-</b><span>plantas comidas</span></div>
+      <div class="stat"><b id="sStarve">-</b><span>presas muertas de hambre</span></div>
+      <div class="stat"><b id="sFirst">-</b><span>paso de la 1.ª captura</span></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <p class="label">Población en el tiempo</p>
+      <canvas id="chart" width="900" height="200" style="width:100%"></canvas>
+      <div class="small"><span style="color:var(--prey)">━ presas</span> &nbsp; <span style="color:var(--pred)">━ depredadores</span> &nbsp; <span style="color:var(--food)">━ plantas disponibles</span></div>
+    </div>
+  </section>
+
+  <!-- ======== derecha: controles e inspector ======== -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <div class="card">
+      <p class="label">Escenario base</p>
+      <div class="seg" id="scenBtns"></div>
+
+      <p class="label">Cantidades</p>
+      <div class="ctl"><span class="em">🐇</span><div><label>Presas</label><input type="range" id="nPrey" min="1" max="60" step="1"></div><output id="oPrey"></output></div>
+      <div class="ctl"><span class="em">🐺</span><div><label>Depredadores</label><input type="range" id="nPred" min="0" max="10" step="1"></div><output id="oPred"></output></div>
+      <div class="ctl"><span class="em">🌿</span><div><label>Plantas</label><input type="range" id="nFood" min="0" max="150" step="1"></div><output id="oFood"></output></div>
+      <div class="ctl"><span class="em">🌱</span><div><label>Rebrote de plantas (prob. por paso)</label><input type="range" id="regrow" min="0" max="0.05" step="0.001"></div><output id="oRegrow"></output></div>
+      <div class="ctl"><span class="em">🪨</span><div><label>Obstáculos</label><input type="range" id="nObst" min="0" max="12" step="1"></div><output id="oObst"></output></div>
+
+      <div class="sep"></div>
+      <p class="label">Cerebros</p>
+      <div class="two">
+        <div><label class="small">Presas 🐇</label><select id="preyBrain"><option value="nn">Red neuronal</option><option value="rule">Reglas fijas</option><option value="random">Aleatorio</option></select></div>
+        <div><label class="small">Depredadores 🐺</label><select id="predBrain"><option value="nn">Red neuronal</option><option value="rule">Reglas fijas</option><option value="random">Aleatorio</option></select></div>
+      </div>
+      <div style="margin-top:12px"><label class="small">Entrenamiento de las presas: <b id="oPreyLvl"></b></label><input type="range" id="preyLvl" min="0" step="1"><div class="lvl"><span>sin entrenar</span><span>final</span></div></div>
+      <div style="margin-top:8px"><label class="small">Entrenamiento de los depredadores: <b id="oPredLvl"></b></label><input type="range" id="predLvl" min="0" step="1"><div class="lvl"><span>sin entrenar</span><span>final</span></div></div>
+      <div class="two" style="margin-top:12px">
+        <div><label class="small">Arquitectura de la red</label><select id="arch"><option value="base">16-16 (base)</option><option value="small">4-4 (reducida)</option></select></div>
+        <div><label class="small">Semilla del mapa</label><input type="number" id="seed" value="5000"></div>
+      </div>
+      <div class="two" style="margin-top:10px">
+        <div><label class="small">Duración</label><select id="limit"><option value="400">400 pasos (como los experimentos)</option><option value="0">sin límite</option></select></div>
+        <div style="display:flex;align-items:end"><button class="pill" id="readMore" style="width:100%;justify-content:space-between">Leer más <span class="ic">↓</span></button></div>
+      </div>
+      <p class="small" style="margin:12px 0 0">Cada cambio reinicia el mundo con la <b>misma semilla</b>: así la única diferencia es el parámetro que cambiaste.</p>
+    </div>
+
+    <div class="card" id="insp">
+      <p class="label">Inspector de la red</p>
+      <div id="inspBody" class="small">Haz clic sobre un conejo o un lobo para ver lo que percibe, cómo se activan sus neuronas y qué decide.</div>
+    </div>
+  </section>
+</div>
+</div>
+<footer>NeuroEcosistema · Proyecto Final Integrador · Electiva I – Inteligencia Artificial · Universidad Santo Tomás, Tunja</footer>
+
+<div class="modal" id="modal"><div class="card">
+  <h2>¿Qué estás viendo?</h2>
+  <p>Cada conejo y cada lobo tiene una <b>red neuronal 14 → 16 → 16 → 2</b> (tanh). En cada paso recibe 14 números sobre lo que percibe
+    (dirección y distancia a la planta, al enemigo y al obstáculo más cercanos, su energía, su posición y una señal de exploración) y
+    devuelve 2 números: hacia dónde moverse (vx, vy). Ese vector es exactamente el movimiento que se aplica; ninguna regla lo corrige.</p>
+  <h4>¿De dónde salen los pesos?</h4>
+  <p>Son los pesos reales guardados en <code>models/</code> por el entrenamiento en Python. Las presas se entrenaron con un algoritmo genético
+    (60 generaciones). Los lobos primero imitaron a un depredador por reglas (aprendizaje supervisado) y luego evolucionaron igual.
+    El control "Entrenamiento" carga la élite guardada en cada punto de control (cada 10 generaciones), para ver en vivo cómo cambia el comportamiento.</p>
+  <h4>Reglas del mundo</h4>
+  <p>Moverse gasta energía (más si se va rápido). Un conejo que toca una planta gana energía; la planta rebrota con la probabilidad indicada.
+    Un lobo que toca un conejo lo captura y digiere 20 pasos (💤). Con energía en cero, el animal muere.</p>
+  <h4>Nota de honestidad</h4>
+  <p class="small">Esta página es una réplica en JavaScript del simulador de Python para la demostración en vivo. Usa los mismos pesos, entradas y reglas,
+    pero su generador de números aleatorios es otro, así que un mapa con la misma semilla no es idéntico al de Python. Las cifras oficiales del
+    informe salen de <code>scripts/run_experiments.py</code>. Las redes se entrenaron con 20 presas y 2 a 5 depredadores: con cantidades muy distintas
+    pueden comportarse peor (eso también es un resultado que se puede mostrar).</p>
+  <div class="bar"><button class="pill main" id="closeM">Entendido</button></div>
+</div></div>
+
+<script>
+const MODELS = /*__MODELS__*/null;
+const SCEN = /*__SCEN__*/null;
+const PHYS = /*__PHYS__*/null;
+//<SIM>
+// =============== simulador (réplica de neuroeco/env.py) ===============
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+class RNG{constructor(s){this.r=mulberry32(s>>>0);this.sp=null}
+  u(){return this.r()} uni(a,b){return a+(b-a)*this.r()}
+  norm(){if(this.sp!==null){const s=this.sp;this.sp=null;return s}let u=0;while(u===0)u=this.r();const v=this.r(),m=Math.sqrt(-2*Math.log(u));this.sp=m*Math.sin(2*Math.PI*v);return m*Math.cos(2*Math.PI*v)}}
+
+function makeNet(g, sizes){
+  const L=[];let i=0;
+  for(let l=0;l<sizes.length-1;l++){const a=sizes[l],b=sizes[l+1];L.push({a,b,W:g.slice(i,i+a*b),bias:g.slice(i+a*b,i+a*b+b)});i+=a*b+b}
+  return {forward(x){const hs=[];let h=x;for(const q of L){const o=new Array(q.b);for(let j=0;j<q.b;j++){let s=q.bias[j];for(let k=0;k<q.a;k++)s+=h[k]*q.W[k*q.b+j];o[j]=Math.tanh(s)}hs.push(o);h=o}return {out:h,hidden:hs.slice(0,-1)}}};
+}
+function unit(x,y){const n=Math.hypot(x,y);return n>1e-9?[x/n,y/n]:[0,0]}
+function nearest(px,py,list,ok,sense,skip){
+  let best=-1,bd=Infinity;
+  for(let i=0;i<list.length;i++){if(i===skip||!ok(list[i]))continue;const dx=list[i].x-px,dy=list[i].y-py,d2=dx*dx+dy*dy;if(d2<bd){bd=d2;best=i}}
+  if(best<0)return [0,0,1];const d=Math.sqrt(bd);if(d>sense)return [0,0,1];
+  const m=Math.max(d,1e-6);return [(list[best].x-px)/m,(list[best].y-py)/m,d/sense];
+}
+function obstObs(px,py,obs,sense){
+  let bd=Infinity,bx=0,by=0,bc=1;
+  for(const o of obs){const dx=o.x-px,dy=o.y-py,dc=Math.hypot(dx,dy),ds=dc-o.r;if(ds<bd){bd=ds;bx=dx;by=dy;bc=dc}}
+  if(bd>sense)return [0,0,1];const m=Math.max(bc,1e-6);return [bx/m,by/m,Math.min(Math.max(bd/sense,0),1)];
+}
+class World{
+  constructor(cfg,seed){
+    const W=PHYS.world.size;this.W=W;this.cfg=cfg;
+    const r=new RNG(seed*7919+13);this.rng=new RNG(seed*104729+7);
+    this.obs=[];for(let k=0;k<cfg.nObst;k++)this.obs.push({x:r.uni(15,W-15),y:r.uni(15,W-15),r:r.uni(5,9)});
+    this.food=[];for(let k=0;k<cfg.nFood;k++)this.food.push({x:r.uni(2,W-2),y:r.uni(2,W-2),avail:true});
+    this.prey=[];for(let k=0;k<cfg.nPrey;k++)this.prey.push({x:r.uni(5,W-5),y:r.uni(5,W-5),E:PHYS.prey.energy0,alive:true,caught:false,life:0,food:0,th:this.rng.uni(0,2*Math.PI),fx:1});
+    this.pred=[];for(let k=0;k<cfg.nPred;k++)this.pred.push({x:r.uni(5,W-5),y:r.u()<.5?3:W-3,E:PHYS.pred.energy0,alive:true,cool:0,caps:0,th:this.rng.uni(0,2*Math.PI),fx:1});
+    for(const L of [this.food,this.prey,this.pred])for(const a of L)this.resolve(a);
+    this.t=0;this.caps=0;this.eaten=0;this.first=null;this.events=[];
+  }
+  resolve(a){for(const o of this.obs){const dx=a.x-o.x,dy=a.y-o.y,d=Math.hypot(dx,dy);if(d<o.r){const m=Math.max(d,1e-9);a.x=o.x+dx/m*(o.r+1e-3);a.y=o.y+dy/m*(o.r+1e-3)}}}
+  obsPrey(q){const s=PHYS.prey.sense,W=this.W;
+    return [...nearest(q.x,q.y,this.food,f=>f.avail,s),...nearest(q.x,q.y,this.pred,p=>p.alive,s),q.E,q.x/W*2-1,q.y/W*2-1,...obstObs(q.x,q.y,this.obs,s),Math.cos(q.th),Math.sin(q.th)]}
+  obsPred(p,i){const s=PHYS.pred.sense,W=this.W,o=nearest(p.x,p.y,this.pred,z=>z.alive,s,i);
+    return [...nearest(p.x,p.y,this.prey,z=>z.alive,s),p.E,p.cool>0?1:0,o[0],o[1],p.x/W*2-1,p.y/W*2-1,...obstObs(p.x,p.y,this.obs,s),Math.cos(p.th),Math.sin(p.th)]}
+  step(aq,ap){
+    const W=this.W,PQ=PHYS.prey,PP=PHYS.pred;this.events=[];
+    const move=(L,A,P)=>L.forEach((a,i)=>{let [vx,vy]=A[i];const n=Math.hypot(vx,vy);if(n>1){vx/=n;vy/=n}const sp=a.alive?Math.min(n,1):0;
+      a.px=a.x;a.py=a.y;if(a.alive){a.x=Math.min(Math.max(a.x+vx*P.speed,0),W);a.y=Math.min(Math.max(a.y+vy*P.speed,0),W);if(Math.abs(vx)>.05)a.fx=vx>0?-1:1}
+      a.sp=sp});
+    move(this.prey,aq,PQ);move(this.pred,ap,PP);
+    for(const a of this.prey)this.resolve(a);for(const a of this.pred)this.resolve(a);
+    for(const q of this.prey)if(q.alive)q.E-=PQ.base_cost+PQ.move_cost*q.sp*q.sp;
+    for(const p of this.pred){if(p.alive)p.E-=PP.base_cost+PP.move_cost*p.sp*p.sp;p.cool=Math.max(p.cool-1,0)}
+    // alimentación
+    for(const f of this.food){if(!f.avail)continue;let b=-1,bd=Infinity;
+      this.prey.forEach((q,i)=>{if(!q.alive)return;const d2=(f.x-q.x)**2+(f.y-q.y)**2;if(d2<bd){bd=d2;b=i}});
+      if(b>=0&&bd<PQ.eat_radius**2){const q=this.prey[b];q.E=Math.min(q.E+PQ.food_gain,1);q.food++;f.avail=false;this.eaten++}}
+    // captura
+    const able=this.pred.map(p=>p.alive&&p.cool<=0),n=new Array(this.pred.length).fill(0);
+    for(const q of this.prey){if(!q.alive)continue;let b=-1,bd=Infinity;
+      this.pred.forEach((p,i)=>{if(!able[i])return;const d2=(q.x-p.x)**2+(q.y-p.y)**2;if(d2<bd){bd=d2;b=i}});
+      if(b>=0&&bd<PP.capture_radius**2){q.alive=false;q.caught=true;n[b]++;this.events.push({x:q.x,y:q.y})}}
+    this.pred.forEach((p,i)=>{if(n[i]>0){p.E=Math.min(p.E+n[i]*PP.prey_gain,1);p.caps+=n[i];p.cool=PP.cooldown;this.caps+=n[i]}});
+    if(this.caps>0&&this.first===null)this.first=this.t+1;
+    for(const q of this.prey)if(q.alive&&q.E<=0)q.alive=false;
+    for(const p of this.pred)if(p.alive&&p.E<=0)p.alive=false;
+    for(const f of this.food)if(!f.avail&&this.rng.u()<this.cfg.regrow)f.avail=true;
+    for(const a of this.prey)a.th+=this.rng.norm()*0.3;
+    for(const a of this.pred)a.th+=this.rng.norm()*0.3;
+    for(const q of this.prey)if(q.alive)q.life++;
+    this.t++;
+  }
+}
+function wallPush(o){return [Math.abs(o[7])>.85?-Math.sign(o[7]):0,Math.abs(o[8])>.85?-Math.sign(o[8]):0]}
+const clip=v=>Math.min(Math.max(v,-1),1);
+function rulePrey(o){let a=[.7*o[12],.7*o[13]];if(o[2]<1){const u=unit(o[0],o[1]);a=[u[0]*.8,u[1]*.8]}
+  if(o[5]<.6){const u=unit(o[3],o[4]);a=[-u[0],-u[1]]}const w=wallPush(o);return [clip(a[0]+w[0]),clip(a[1]+w[1])]}
+function rulePred(o){let a=[.7*o[12],.7*o[13]];if(o[2]<1)a=unit(o[0],o[1]);if(o[4]>.5)a=[a[0]*.3,a[1]*.3];
+  const w=wallPush(o);return [clip(a[0]+w[0]),clip(a[1]+w[1])]}
+function decide(kind,net,o,rule){if(kind==='nn'){const r=net.forward(o);return {a:r.out,hidden:r.hidden}}
+  if(kind==='rule')return {a:rule(o),hidden:null};return {a:[.7*o[12],.7*o[13]],hidden:null}}
+//</SIM>
+
+// =============== interfaz ===============
+const $=id=>document.getElementById(id);
+const PREY_IN=["dir. planta x","dir. planta y","dist. planta","dir. lobo x","dir. lobo y","dist. lobo","energía","posición x","posición y","dir. obstáculo x","dir. obstáculo y","dist. obstáculo","exploración cos","exploración sin"];
+const PRED_IN=["dir. conejo x","dir. conejo y","dist. conejo","energía","digiriendo","dir. otro lobo x","dir. otro lobo y","posición x","posición y","dir. obstáculo x","dir. obstáculo y","dist. obstáculo","exploración cos","exploración sin"];
+const LV={prey:MODELS.base.prey.order,pred:MODELS.base.pred.order};
+const LVNAME={random:"sin entrenar (pesos al azar)",sup:"solo supervisado (imitó reglas)",g0:"generación 0",g10:"generación 10",g20:"generación 20",g30:"generación 30",g40:"generación 40",g50:"generación 50",g60:"generación 60 (final)"};
+const cv=$('world'),cx=cv.getContext('2d'),ch=$('chart'),cc=ch.getContext('2d');
+let world,netQ,netP,last={q:[],p:[]},sel=null,playing=false,acc=0,hist=[],fx=[];
+
+// escenarios
+Object.entries(SCEN).forEach(([k,s],i)=>{const b=document.createElement('button');b.dataset.k=k;
+  b.innerHTML=['(a) abundancia','(b) escasez','(c) presión + obstáculos'][i]||k;b.onclick=()=>loadScen(k);$('scenBtns').appendChild(b)});
+function loadScen(k){const s=SCEN[k];$('nPrey').value=PHYS.world.n_prey;$('nPred').value=s.n_pred;$('nFood').value=s.n_food;$('regrow').value=s.regrow;$('nObst').value=s.n_obst;
+  document.querySelectorAll('#scenBtns button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));reset()}
+$('preyLvl').max=LV.prey.length-1;$('predLvl').max=LV.pred.length-1;$('preyLvl').value=LV.prey.length-1;$('predLvl').value=LV.pred.length-1;
+['nPrey','nPred','nFood','regrow','nObst','preyLvl','predLvl'].forEach(id=>$(id).addEventListener('input',()=>{document.querySelectorAll('#scenBtns button').forEach(b=>{if(['nPrey','nPred','nFood','regrow','nObst'].includes(id))b.classList.remove('on')});reset()}));
+['preyBrain','predBrain','arch','seed','limit'].forEach(id=>$(id).addEventListener('change',reset));
+
+function cfg(){return {nPrey:+$('nPrey').value,nPred:+$('nPred').value,nFood:+$('nFood').value,regrow:+$('regrow').value,nObst:+$('nObst').value}}
+function reset(){
+  const c=cfg();$('oPrey').textContent=c.nPrey;$('oPred').textContent=c.nPred;$('oFood').textContent=c.nFood;$('oRegrow').textContent=c.regrow.toFixed(3);$('oObst').textContent=c.nObst;
+  const M=MODELS[$('arch').value],lq=LV.prey[+$('preyLvl').value],lp=LV.pred[+$('predLvl').value];
+  $('oPreyLvl').textContent=$('preyBrain').value==='nn'?LVNAME[lq]:'— (no usa red)';$('oPredLvl').textContent=$('predBrain').value==='nn'?LVNAME[lp]:'— (no usa red)';
+  $('preyLvl').disabled=$('preyBrain').value!=='nn';$('predLvl').disabled=$('predBrain').value!=='nn';
+  netQ=makeNet(M.prey.levels[lq],[14,...M.hidden,2]);netP=makeNet(M.pred.levels[lp],[14,...M.hidden,2]);
+  world=new World(c,+$('seed').value||0);hist=[];fx=[];acc=0;sel=null;$('endOv').classList.remove('show');
+  think();record();draw(1);$('inspBody').innerHTML='Haz clic sobre un conejo o un lobo para ver lo que percibe, cómo se activan sus neuronas y qué decide.';
+}
+function think(){ // calcula entradas y decisiones de todos los agentes para el paso actual
+  last.q=world.prey.map(q=>{const o=world.obsPrey(q);return {o,...decide($('preyBrain').value,netQ,o,rulePrey)}});
+  last.p=world.pred.map((p,i)=>{const o=world.obsPred(p,i);return {o,...decide($('predBrain').value,netP,o,rulePred)}});
+}
+function record(){hist.push([world.prey.filter(q=>q.alive).length,world.pred.filter(p=>p.alive).length,world.food.filter(f=>f.avail).length])}
+function done(){const lim=+$('limit').value;return (lim&&world.t>=lim)||!world.prey.some(q=>q.alive)}
+function tick(){
+  if(done())return false;
+  world.step(last.q.map(d=>d.a),last.p.map(d=>d.a));
+  fx.forEach(e=>e.t+=3);for(const e of world.events)fx.push({...e,t:0});
+  think();record();
+  if(done())finish();return true;
+}
+function finish(){playing=false;$('play').textContent='▶ Iniciar';
+  const alive=world.prey.filter(q=>q.alive).length,life=world.prey.reduce((s,q)=>s+q.life,0)/world.prey.length/Math.max(world.t,1);
+  $('endT').textContent=alive?`Sobrevivieron ${alive} de ${world.prey.length} conejos`:'No quedan conejos';
+  $('endS').innerHTML=`${world.t} pasos · ${world.caps} capturas · ${world.eaten} plantas comidas · vida media ${(life*100).toFixed(0)} % del episodio`;
+  $('endOv').classList.add('show')}
+
+// ---------- dibujo ----------
+const S=v=>v*cv.width/PHYS.world.size;
+function emoji(ch,x,y,size,flip,alpha){cx.save();cx.globalAlpha=alpha??1;cx.translate(x,y);if(flip===-1)cx.scale(-1,1);cx.font=`${size}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif`;
+  cx.fillStyle="#fff";cx.textAlign="center";cx.textBaseline="middle";cx.fillText(ch,0,0);cx.restore()}
+function bg(){const g=cx.createRadialGradient(cv.width*.5,cv.height*.45,50,cv.width*.5,cv.height*.5,cv.width*.75);g.addColorStop(0,'#0f1a16');g.addColorStop(1,'#060807');
+  cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle='rgba(126,224,138,.05)';
+  for(let i=0;i<cv.width;i+=40)for(let j=0;j<cv.height;j+=40){cx.beginPath();cx.arc(i+20,j+20,1.4,0,7);cx.fill()}}
+function draw(fr){
+  bg();
+  for(const o of world.obs){cx.fillStyle='rgba(0,0,0,.45)';cx.beginPath();cx.ellipse(S(o.x),S(o.y+o.r*.55),S(o.r*.95),S(o.r*.35),0,0,7);cx.fill();
+    cx.strokeStyle='rgba(155,140,248,.18)';cx.setLineDash([4,6]);cx.beginPath();cx.arc(S(o.x),S(o.y),S(o.r),0,7);cx.stroke();cx.setLineDash([]);
+    emoji('🪨',S(o.x),S(o.y),S(o.r*2.05))}
+  for(const f of world.food)emoji(f.avail?'🌿':'🌱',S(f.x),S(f.y),S(f.avail?2.8:1.8),1,f.avail?1:.35);
+  const pos=a=>[S(a.px===undefined?a.x:a.px+(a.x-a.px)*fr),S(a.py===undefined?a.y:a.py+(a.y-a.py)*fr)];
+  if(sel){const a=sel.sp==='q'?world.prey[sel.i]:world.pred[sel.i],d=sel.sp==='q'?last.q[sel.i]:last.p[sel.i],R=sel.sp==='q'?PHYS.prey.sense:PHYS.pred.sense,[x,y]=pos(a);
+    cx.fillStyle='rgba(155,140,248,.07)';cx.beginPath();cx.arc(x,y,S(R),0,7);cx.fill();cx.strokeStyle='rgba(155,140,248,.55)';cx.setLineDash([8,8]);cx.beginPath();cx.arc(x,y,S(R),0,7);cx.stroke();cx.setLineDash([]);
+    const o=d.o,line=(dx,dy,dd,c)=>{if(dd>=1)return;cx.strokeStyle=c;cx.lineWidth=2.5;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+S(dx*dd*R),y+S(dy*dd*R));cx.stroke()};
+    if(sel.sp==='q'){line(o[0],o[1],o[2],'rgba(126,224,138,.9)');line(o[3],o[4],o[5],'rgba(255,122,107,.9)')}else line(o[0],o[1],o[2],'rgba(127,220,242,.9)');
+  }
+  world.prey.forEach(q=>{if(!q.alive)return;const [x,y]=pos(q);emoji('🐇',x,y,S(3.6),q.fx,.55+.45*Math.min(q.E*1.4,1));ebar(x,y+S(2.4),q.E,'#7fdcf2')});
+  world.pred.forEach(p=>{if(!p.alive)return;const [x,y]=pos(p);emoji('🐺',x,y,S(4.6),1,.55+.45*Math.min(p.E*1.4,1));ebar(x,y+S(3),p.E,'#ff7a6b');if(p.cool>0)emoji('💤',x+S(2.6),y-S(2.6),S(2.2))});
+  fx=fx.filter(e=>e.t<18);fx.forEach(e=>{emoji('💥',S(e.x),S(e.y),S(3+e.t*.15),1,1-e.t/18)});
+  if(sel){const a=sel.sp==='q'?world.prey[sel.i]:world.pred[sel.i],d=sel.sp==='q'?last.q[sel.i]:last.p[sel.i],[x,y]=pos(a);
+    cx.strokeStyle='#f6d365';cx.lineWidth=5;cx.lineCap='round';cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+S(d.a[0]*10),y+S(d.a[1]*10));cx.stroke();cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.arc(x,y,S(3.4),0,7);cx.stroke();cx.lineWidth=1}
+  const aq=world.prey.filter(q=>q.alive).length,ap=world.pred.filter(p=>p.alive).length;
+  $('sPrey').textContent=aq+'/'+world.prey.length;$('sPred').textContent=ap+'/'+world.pred.length;$('sCaps').textContent=world.caps;$('sFood').textContent=world.eaten;
+  $('sStarve').textContent=world.prey.filter(q=>!q.alive&&!q.caught).length;$('sFirst').textContent=world.first??'—';
+  $('tlabel').textContent='paso '+world.t+(+$('limit').value?' / '+$('limit').value:'');
+  chart();inspector();
+}
+function ebar(x,y,E,c){const w=S(3);cx.fillStyle='rgba(255,255,255,.12)';cx.fillRect(x-w/2,y,w,S(.45));cx.fillStyle=c;cx.fillRect(x-w/2,y,w*Math.max(E,0),S(.45))}
+function chart(){const w=ch.width,h=ch.height;cc.clearRect(0,0,w,h);const T=Math.max(+$('limit').value||0,hist.length,50);
+  cc.strokeStyle='#1d1d29';for(let i=1;i<4;i++){cc.beginPath();cc.moveTo(0,h*i/4);cc.lineTo(w,h*i/4);cc.stroke()}
+  const mx=[Math.max(world.prey.length,1),Math.max(world.pred.length,1),Math.max(world.food.length,1)],col=['#7fdcf2','#ff7a6b','#7ee08a'];
+  [2,0,1].forEach(k=>{cc.strokeStyle=col[k];cc.lineWidth=3;cc.beginPath();hist.forEach((v,i)=>{const x=i/T*w,y=h-8-v[k]/mx[k]*(h-16);i?cc.lineTo(x,y):cc.moveTo(x,y)});cc.stroke()})}
+function col(v){const a=Math.min(Math.abs(v),1);return v>=0?`rgba(127,220,242,${.1+.9*a})`:`rgba(155,92,246,${.1+.9*a})`}
+function barRow(name,v){const w=Math.min(Math.abs(v),1)*50;return `<div class="row"><span>${name}</span><div class="track"><i style="left:${v>=0?50:50-w}%;width:${w}%;background:${v>=0?'var(--cy)':'var(--vi)'}"></i><i style="left:50%;width:1px;background:#444"></i></div><span style="text-align:right">${v.toFixed(2)}</span></div>`}
+function inspector(){if(!sel)return;const q=sel.sp==='q',a=q?world.prey[sel.i]:world.pred[sel.i],d=q?last.q[sel.i]:last.p[sel.i],kind=q?$('preyBrain').value:$('predBrain').value;
+  const kn={nn:'red neuronal',rule:'reglas fijas',random:'aleatorio'}[kind];
+  let h=`<div class="who"><span class="big">${q?'🐇':'🐺'}</span><div><b>${q?'Conejo':'Lobo'} #${sel.i}</b><div class="small">${kn}${a.alive?'':' · muerto'} · energía ${a.E.toFixed(2)}</div></div></div>`;
+  h+=`<p class="label" style="margin-top:6px">Entradas (lo que percibe)</p>`+d.o.map((v,j)=>barRow(`${j}. ${(q?PREY_IN:PRED_IN)[j]}`,v)).join('');
+  if(d.hidden)d.hidden.forEach((L,li)=>{h+=`<p class="label" style="margin-top:10px">Capa oculta ${li+1} · ${L.length} neuronas</p><div class="neur">`+L.map(v=>`<div title="${v.toFixed(2)}" style="background:${col(v)}"></div>`).join('')+'</div>'});
+  else h+=`<p class="small" style="margin-top:10px">Este animal no usa red: lo mueve ${kind==='rule'?'una regla escrita a mano':'la señal de exploración al azar'}.</p>`;
+  h+=`<p class="label" style="margin-top:10px">Salida (decisión de movimiento)</p>`+barRow('vx (horizontal)',d.a[0])+barRow('vy (vertical)',d.a[1]);
+  h+=`<p class="small">La flecha dorada en el mapa es esta salida. Línea verde: planta percibida · roja: lobo percibido · azul: conejo percibido.</p>`;
+  $('inspBody').innerHTML=h}
+
+cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*PHYS.world.size,y=(e.clientY-r.top)/r.height*PHYS.world.size;let b=null,bd=5;
+  world.prey.forEach((q,i)=>{const d=Math.hypot(q.x-x,q.y-y);if(q.alive&&d<bd){bd=d;b={sp:'q',i}}});
+  world.pred.forEach((p,i)=>{const d=Math.hypot(p.x-x,p.y-y);if(p.alive&&d<bd){bd=d;b={sp:'p',i}}});sel=b;
+  if(!b)$('inspBody').innerHTML='Haz clic sobre un conejo o un lobo para ver lo que percibe, cómo se activan sus neuronas y qué decide.';draw(1)});
+$('play').onclick=()=>{if(done()){reset()}playing=!playing;$('play').textContent=playing?'❚❚ Pausa':'▶ Iniciar'};
+$('stepB').onclick=()=>{playing=false;$('play').textContent='▶ Iniciar';tick();acc=0;draw(1)};
+$('resetB').onclick=reset;$('again').onclick=()=>{reset();playing=true;$('play').textContent='❚❚ Pausa'};
+$('readMore').onclick=()=>$('modal').classList.add('show');$('closeM').onclick=()=>$('modal').classList.remove('show');
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show')};
+function loop(){if(playing){acc+=+$('speed').value;while(acc>=1&&playing){acc-=1;if(!tick()){acc=0;break}}}draw(playing?Math.min(acc,1):1);requestAnimationFrame(loop)}
+loadScen(Object.keys(SCEN)[0]);loop();
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+    pg.locator("("(()=>{const i=world.prey.findIndex(q=>q.alive);const q=world.prey[i];const r=document.getElementById('world').getBoundingClientRect();return [r.left+q.x/100*r.width,r.top+q.y/100*r.height]})()")
