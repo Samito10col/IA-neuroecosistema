@@ -71,12 +71,6 @@
   .who{display:flex;gap:12px;align-items:center;margin-bottom:8px}
   .who .big{font-size:34px}
   .who b{font-family:"Space Grotesk",system-ui,sans-serif;font-size:18px;font-weight:500}
-  /* ---------- modal ---------- */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;place-items:center;z-index:9;padding:20px}
-  .modal.show{display:grid}
-  .modal .card{max-width:760px;max-height:86vh;overflow:auto}
-  .modal h2{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:500;font-size:30px;margin:0 0 10px}
-  .modal h4{margin:16px 0 4px}
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;color:var(--mut);font-size:12px}
   footer{color:var(--mut);font-size:12px;text-align:center;padding:10px 0 30px}
 </style>
@@ -161,11 +155,8 @@
         <div><label class="small">Arquitectura de la red</label><select id="arch"><option value="base">16-16 (base)</option><option value="small">4-4 (reducida)</option></select></div>
         <div><label class="small">Semilla del mapa</label><input type="number" id="seed" value="5000"></div>
       </div>
-      <div class="two" style="margin-top:10px">
-        <div><label class="small">Duración</label><select id="limit"><option value="400">400 pasos (como los experimentos)</option><option value="0">sin límite</option></select></div>
-        <div style="display:flex;align-items:end"><button class="pill" id="readMore" style="width:100%;justify-content:space-between">Leer más <span class="ic">↓</span></button></div>
-      </div>
-      <p class="small" style="margin:12px 0 0">Cada cambio reinicia el mundo con la <b>misma semilla</b>: así la única diferencia es el parámetro que cambiaste.</p>
+      <div style="margin-top:10px"><label class="small">Duración</label><select id="limit"><option value="400">400 pasos (como los experimentos)</option><option value="0">sin límite</option></select></div>
+          <p class="small" style="margin:12px 0 0">Cada cambio reinicia el mundo con la <b>misma semilla</b>: así la única diferencia es el parámetro que cambiaste.</p>
     </div>
 
     <div class="card" id="insp">
@@ -177,25 +168,6 @@
 </div>
 <footer>NeuroEcosistema · Proyecto Final Integrador · Electiva I – Inteligencia Artificial · Universidad Santo Tomás, Tunja</footer>
 
-<div class="modal" id="modal"><div class="card">
-  <h2>¿Qué estás viendo?</h2>
-  <p>Cada conejo y cada lobo tiene una <b>red neuronal 14 → 16 → 16 → 2</b> (tanh). En cada paso recibe 14 números sobre lo que percibe
-    (dirección y distancia a la planta, al enemigo y al obstáculo más cercanos, su energía, su posición y una señal de exploración) y
-    devuelve 2 números: hacia dónde moverse (vx, vy). Ese vector es exactamente el movimiento que se aplica; ninguna regla lo corrige.</p>
-  <h4>¿De dónde salen los pesos?</h4>
-  <p>Son los pesos reales guardados en <code>models/</code> por el entrenamiento en Python. Las presas se entrenaron con un algoritmo genético
-    (60 generaciones). Los lobos primero imitaron a un depredador por reglas (aprendizaje supervisado) y luego evolucionaron igual.
-    El control "Entrenamiento" carga la élite guardada en cada punto de control (cada 10 generaciones), para ver en vivo cómo cambia el comportamiento.</p>
-  <h4>Reglas del mundo</h4>
-  <p>Moverse gasta energía (más si se va rápido). Un conejo que toca una planta gana energía; la planta rebrota con la probabilidad indicada.
-    Un lobo que toca un conejo lo captura y digiere 20 pasos (💤). Con energía en cero, el animal muere.</p>
-  <h4>Nota de honestidad</h4>
-  <p class="small">Esta página es una réplica en JavaScript del simulador de Python para la demostración en vivo. Usa los mismos pesos, entradas y reglas,
-    pero su generador de números aleatorios es otro, así que un mapa con la misma semilla no es idéntico al de Python. Las cifras oficiales del
-    informe salen de <code>scripts/run_experiments.py</code>. Las redes se entrenaron con 20 presas y 2 a 5 depredadores: con cantidades muy distintas
-    pueden comportarse peor (eso también es un resultado que se puede mostrar).</p>
-  <div class="bar"><button class="pill main" id="closeM">Entendido</button></div>
-</div></div>
 
 <script>
 const MODELS = /*__MODELS__*/null;
@@ -381,8 +353,6 @@ cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),x=(e.clientX-
 $('play').onclick=()=>{if(done()){reset()}playing=!playing;$('play').textContent=playing?'❚❚ Pausa':'▶ Iniciar'};
 $('stepB').onclick=()=>{playing=false;$('play').textContent='▶ Iniciar';tick();acc=0;draw(1)};
 $('resetB').onclick=reset;$('again').onclick=()=>{reset();playing=true;$('play').textContent='❚❚ Pausa'};
-$('readMore').onclick=()=>$('modal').classList.add('show');$('closeM').onclick=()=>$('modal').classList.remove('show');
-$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show')};
 function loop(){if(playing){acc+=+$('speed').value;while(acc>=1&&playing){acc-=1;if(!tick()){acc=0;break}}}draw(playing?Math.min(acc,1):1);requestAnimationFrame(loop)}
 loadScen(Object.keys(SCEN)[0]);loop();
 </script>
